@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Almanca Taşıma Araçları Oyunu</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f0f4f8;
+    }
+    h2 {
+      color: #333;
+    }
+    .container {
+      display: flex;
+      gap: 40px;
+    }
+    .column {
+      flex: 1;
+      padding: 10px;
+    }
+    .draggable {
+      padding: 10px;
+      margin: 10px 0;
+      background-color: #fff;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      cursor: grab;
+    }
+    .droppable {
+      padding: 10px;
+      margin: 10px 0;
+      border: 2px dashed #aaa;
+      min-height: 50px;
+      border-radius: 8px;
+      background-color: #e0e7ff;
+    }
+    .correct {
+      border: 2px solid green;
+      background-color: #c8e6c9;
+    }
+    .incorrect {
+      border: 2px solid red;
+      background-color: #ffcdd2;
+    }
+  </style>
+</head>
+<body>
+  <h2>Hangi Taşıma Aracıyla Gidilir? - Almanca Eşleştirme Oyunu</h2>
+  <p>Taşıma aracını doğru cümleyle eşleştir!</p>
+  <div class="container">
+    <div class="column" id="vehicles">
+      <div class="draggable" draggable="true" id="Auto">Auto</div>
+      <div class="draggable" draggable="true" id="Bus">Bus</div>
+      <div class="draggable" draggable="true" id="Zug">Zug</div>
+      <div class="draggable" draggable="true" id="Flugzeug">Flugzeug</div>
+      <div class="draggable" draggable="true" id="Fahrrad">Fahrrad</div>
+    </div>
+    <div class="column" id="sentences">
+      <div class="droppable" data-answer="Auto">Ich fahre mit dem ___</div>
+      <div class="droppable" data-answer="Bus">Ich fahre mit dem ___</div>
+      <div class="droppable" data-answer="Zug">Ich fahre mit dem ___</div>
+      <div class="droppable" data-answer="Flugzeug">Ich fliege mit dem ___</div>
+      <div class="droppable" data-answer="Fahrrad">Ich fahre mit dem ___</div>
+    </div>
+  </div>
+
+  <script>
+    const draggables = document.querySelectorAll('.draggable');
+    const droppables = document.querySelectorAll('.droppable');
+
+    draggables.forEach(item => {
+      item.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text', e.target.id);
+      });
+    });
+
+    droppables.forEach(drop => {
+      drop.addEventListener('dragover', (e) => {
+        e.preventDefault();
+      });
+
+      drop.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const droppedId = e.dataTransfer.getData('text');
+        const draggedElement = document.getElementById(droppedId);
+        const correctAnswer = drop.getAttribute('data-answer');
+
+        drop.textContent = drop.textContent.replace('___', droppedId);
+
+        if (droppedId === correctAnswer) {
+          drop.classList.add('correct');
+          drop.classList.remove('incorrect');
+        } else {
+          drop.classList.add('incorrect');
+          drop.classList.remove('correct');
+        }
+
+        draggedElement.remove();
+      });
+    });
+  </script>
+</body>
+</html>
